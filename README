@@ -1,0 +1,57 @@
+Sources https://www.cert.ssi.gouv.fr/alerte/CERTFR-2020-ALE-008/
+Référence	CERTFR-2020-ALE-008
+Titre	Vulnérabilité dans l’implémentation du protocole SMB par Microsoft
+Date de la première version	11 mars 2020
+Date de la dernière version	11 mars 2020
+Source(s)	Bulletin de sécurité Microsoft ADV200005 du 10 mars 2020
+Pièce(s) jointe(s)	Aucune(s)
+
+Tableau 1: Gestion du document
+Une gestion de version détaillée se trouve à la fin de ce document.
+
+RISQUE(S)
+Exécution de code arbitraire à distance
+SYSTÈMES AFFECTÉS
+Windows 10 version 1903
+Windows 10 version 1909
+Windows Server (Server Core Installation) version 1903
+Windows Server (Server Core Installation) version 1909
+RÉSUMÉ
+Les solutions Microsoft reposent sur un grand nombre de services réseau dont un service de partage de ressources (fichiers, imprimantes, ...) dénommé SMB. Ce service est présent à la fois sur les postes de travail et sur les serveurs Windows.
+
+Microsoft a ajouté une extension au protocole SMB V3.1.1 permettant la compression des flux. Cette extension, activée par défaut, est implémentée depuis certaines versions de Windows (cf. ci-dessus). Les serveurs Windows Server 2019, Windows Server 2016 ainsi que les versions antérieures ne sont pas affectés.
+
+Le 10 mars 2020, l'éditeur a publié un avis concernant une vulnérabilité affectant la gestion de la compression dans son implémentation du protocole SMB. Cette vulnérabilité est de type débordement de tampon et permet à un attaquant de provoquer une exécution de code arbitraire à distance sans authentification (preauth).
+
+La fonction vulnérable est utilisée à la fois par le client et le serveur qui partage des ressources (fichier, imprimante). Par conséquent, une personne malveillante pourrait exploiter cette vulnérabilité pour compromettre un serveur de ressources SMB, puis, par rebond, toutes les machines qui se connecteraient à ce serveur : la compromission en chaîne de machines vulnérables est donc possible.
+
+Des informations sur cette vulnérabilité ont été divulguées par des chercheurs alors que Microsoft n'a pas publié de correctif.
+
+Le CERT-FR estime que des codes d'exploitation sont susceptibles d'être publiés rapidement.
+
+SOLUTION
+Dans l'attente d'un correctif de l'éditeur, le CERT-FR demande que le contournement publié par l'éditeur [1] soit immédiatement appliqué.
+
+Il est important de souligner que ce contournement protège le service 'serveur' SMB et ne nécessite pas de redémarrrage. En revanche, les clients SMB restent vulnérables.
+
+Le CERT-FR rappelle que les règles de bonnes pratiques de sécurisation des environnements Microsoft doivent être scrupuleusement respectées :
+
+Interdire tout flux SMB sur les ports TCP/139 et TCP/445 en entrée et en sortie du Système d'Information [2] ;
+Pour le cloisonnement interne : n'autoriser les flux SMB que lorsque cela est nécessaire (contrôleurs de domaine, serveurs de fichiers, etc.) et bloquer ce flux entre postes de travail ;
+Pour les postes nomades : interdire tous les flux SMB entrant et sortant et n'autoriser ces flux vers des serveurs SMB qu'au travers d'un VPN sécurisé [3][4]
+Ces mesures sont de portée générale et doivent être appliquées systématiquement au sein d'un Système d'Information.
+
+ 
+
+DOCUMENTATION
+[1] Bulletin de sécurité Microsoft ADV200005 du 10 mars 2020
+https://portal.msrc.microsoft.com/fr-fr/security-guidance/advisory/ADV200005
+[2] Recommandations relatives au blocage de ports de pare-feu spécifiques pour empêcher le trafic SMB de quitter l'environnement d'entreprise
+https://support.microsoft.com/fr-fr/help/3185535/preventing-smb-traffic-from-lateral-connections
+[3] Bulletin d'actualité CERT-FR
+https://www.cert.ssi.gouv.fr/actualite/CERTFR-2020-ACT-001/
+[4] Recommandations sur le nomadisme numérique
+https://www.ssi.gouv.fr/guide/recommandations-sur-le-nomadisme-numerique/
+GESTION DÉTAILLÉE DU DOCUMENT
+le 11 mars 2020
+Version initiale
